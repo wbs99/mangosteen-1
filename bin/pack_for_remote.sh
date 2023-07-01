@@ -2,11 +2,11 @@
 user=mangosteen
 ip=121.5.55.95
 
-time=$(date +'%Y%m%d-%H%M%S')
+time=$(date +'%Y%m%d-%H%M%S')            # 获取当前时间
 cache_dir=tmp/deploy_cache
-dist=$cache_dir/mangosteen-$time.tar.gz
-current_dir=$(dirname $0)
-deploy_dir=/home/$user/deploys/$time
+dist=$cache_dir/mangosteen-$time.tar.gz  # 获取压缩包文件名
+current_dir=$(dirname $0)                # 获取当前目录，在这就是 bin 目录
+deploy_dir=/home/$user/deploys/$time     # 远程部署目录
 gemfile=$current_dir/../Gemfile
 gemfile_lock=$current_dir/../Gemfile.lock
 vendor_cache_dir=$current_dir/../vendor/cache
