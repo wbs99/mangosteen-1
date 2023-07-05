@@ -1,7 +1,9 @@
 require 'rspec_api_documentation'
+
 RspecApiDocumentation.configure do |config|
   config.request_body_formatter = :json
 end
+
 RSpec.configure do |config|
   # 设置请求体格式为 body
   config.before(:each) do |spec|
