@@ -40,7 +40,7 @@ class Api::V1::TagsController < ApplicationController
 
   def destroy
     tag = Tag.find params[:id]
-    return head :forbidden unless tag.user_id === request.env['current_user_id']
+    return head :forbidden unless tag.user_id == request.env['current_user_id']
     tag.deleted_at = Time.now
     if tag.save
       head 200
