@@ -8,8 +8,12 @@ Rails.application.routes.draw do
       resources :validation_codes, only: [:create]
       resource :session, only: [:create, :destroy]
       resource :me, only: [:show]
-      resources :items
       resources :tags
+      resources :items do 
+        collection do 
+          get :summary
+        end
+      end
     end
   end
 end

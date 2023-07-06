@@ -22,4 +22,28 @@ class Api::V1::ItemsController < ApplicationController
       render json: {errors: item.errors}, status: :unprocessable_entity
     end
   end
+
+  def summary
+    hash = Hash.new
+    # hash 最终的格式  {2023-06-18:100,2023-06-19:200,2023-06-20:300}
+    items = Item
+      .where(user_id: request.env['current_user_id'])
+      .where(kind: params[:kind])
+      .where(happen_at: params[:happened_after]..params[:happened_before])
+    items.each do |item|
+      key = item.happen_at.in_time_zone('Beijing').strftime('%F')
+      # 下面这两句是等价的
+      # hash[key] = hash[key] || 0
+      hash[key] ||= 0
+      hash[key] += item.amount
+    end
+    # 遍历 hash 转换成数组
+    groups = hash
+      .map { |key, value| {"happen_at": key, amount: value} }
+      .sort { |a, b| a[:happen_at] <=> b[:happen_at] }
+    render json: {
+      groups: groups,
+      total: items.sum(:amount)
+    }
+  end
 end
