@@ -3,30 +3,21 @@ require 'rails_helper'
 RSpec.describe "Items", type: :request do
   describe "获取账目" do
     it "分页，未登录" do
-      user1 = User.create email: '1@qq.com'
-      user2 = User.create email: '2@qq.com'
-      11.times { Item.create amount: 100, user_id: user1.id }
-      11.times { Item.create amount: 100, user_id: user2.id }
+      user1 = create :user
+      create_list :item, 11, amount: 100, user: user1,
+                             tags_id: [create(:tag, user: user1).id]
       get '/api/v1/items'
       expect(response).to have_http_status 401
     end
+    
     it "分页" do
-      user1 = User.create email: '1@qq.com'
-      user2 = User.create email: '2@qq.com'
-      tag1 = Tag.create name: 'tag1', sign: 'x', user_id: user1.id
-      tag2 = Tag.create name: 'tag2', sign: 'x', user_id: user1.id
-      11.times { 
-        Item.create amount: 100,           
-        tags_id: [tag1.id,tag2.id],
-        happen_at: '2018-01-01T00:00:00+08:00', 
-        user_id: user1.id 
-      }
-      11.times { 
-        Item.create amount: 100,           
-        tags_id: [tag1.id,tag2.id],
-        happen_at: '2018-01-01T00:00:00+08:00', 
-        user_id: user2.id 
-      }
+      user1 = create:user
+      user2 = create:user
+      tag1 = create:tag, user_id: user1.id
+      tag2 = create:tag, user_id: user2.id
+      create_list :item, 11, user: user1, tags_id: [tag1.id]
+      create_list :item, 11, user: user2, tags_id: [tag2.id]
+
       get '/api/v1/items', headers: user1.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
@@ -38,12 +29,12 @@ RSpec.describe "Items", type: :request do
       expect(json['resources'].size).to eq 1
     end
     it "按时间筛选" do
-      user1 = User.create email: '1@qq.com'
-      tag1 = Tag.create name: 'tag1', sign: 'x', user_id: user1.id
-      tag2 = Tag.create name: 'tag2', sign: 'x', user_id: user1.id
-      item1 = Item.create amount: 100, created_at: '2018-01-02', tags_id: [tag1.id,tag2.id],user_id: user1.id,  happen_at: '2018-01-01T00:00:00+08:00'
-      item2 = Item.create amount: 100, created_at: '2018-01-02', tags_id: [tag1.id,tag2.id],user_id: user1.id,  happen_at: '2018-01-01T00:00:00+08:00'
-      item3 = Item.create amount: 100, created_at: '2019-01-01', tags_id: [tag1.id,tag2.id],user_id: user1.id,  happen_at: '2018-01-01T00:00:00+08:00'
+      user1 = create:user
+      tag1 = create:tag, user_id: user1.id
+      tag2 = create:tag, user_id: user1.id
+      item1 = create:item, user:user1, tags_id: [tag1.id,tag2.id], created_at: '2018-01-02', happen_at: '2018-01-01T00:00:00+08:00'
+      item2 = create:item, user:user1, tags_id: [tag1.id,tag2.id], created_at: '2018-01-02', happen_at: '2018-01-01T00:00:00+08:00'
+      item3 = create:item, user:user1, tags_id: [tag1.id,tag2.id], created_at: '2019-01-01', happen_at: '22018-01-01T00:00:00+08:00'
 
       get '/api/v1/items?created_after=2018-01-01&created_before=2018-01-03', 
         headers: user1.generate_auth_header
@@ -117,9 +108,9 @@ RSpec.describe "Items", type: :request do
       post '/api/v1/items', params: {}, headers: user.generate_auth_header
       expect(response).to have_http_status 422
       json = JSON.parse response.body
-      expect(json['errors']['amount'][0]).to eq "can't be blank"
-      expect(json['errors']['tags_id'][0]).to eq "can't be blank"
-      expect(json['errors']['happen_at'][0]).to eq "can't be blank"
+      expect(json['errors']['amount'][0]).to eq "必填"
+      expect(json['errors']['tags_id'][0]).to eq "必填"
+      expect(json['errors']['happen_at'][0]).to eq "必填"
     end
   end
   describe "统计数据" do 
