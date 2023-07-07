@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Items", type: :request do
   describe "获取账目" do
     it "分页，未登录" do
-      user1 = create :user
+      user1 = create:user
       create_list :item, 11, amount: 100, user: user1,
                              tag_ids: [create(:tag, user: user1).id]
       get '/api/v1/items'
@@ -45,7 +45,7 @@ RSpec.describe "Items", type: :request do
       expect(json['resources'][1]['id']).to eq item2.id
     end
     it "按时间筛选（边界条件）" do
-      user1 = User.create email: '1@qq.com'
+      user1 = create:user
       item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
 
       get '/api/v1/items?created_after=2018-01-01&created_before=2018-01-02',
@@ -56,7 +56,7 @@ RSpec.describe "Items", type: :request do
       expect(json['resources'][0]['id']).to eq item1.id
     end
     it "按时间筛选（边界条件2）" do
-      user1 = User.create email: '1@qq.com'
+      user1 = create:user
       item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
       item2 = Item.create amount: 100, created_at: '2017-01-01', user_id: user1.id
       get '/api/v1/items?created_after=2018-01-01', 
@@ -67,7 +67,7 @@ RSpec.describe "Items", type: :request do
       expect(json['resources'][0]['id']).to eq item1.id
     end
     it "按时间筛选（边界条件3）" do
-      user1 = User.create email: '1@qq.com'
+      user1 = create:user
       item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
       item2 = Item.create amount: 100, created_at: '2019-01-01', user_id: user1.id
 
@@ -85,7 +85,7 @@ RSpec.describe "Items", type: :request do
       expect(response).to have_http_status 401
     end
     it "登录后创建" do 
-      user = User.create email: '1@qq.com'
+      user = create:user
       tag1 = Tag.create name: 'tag1', sign: 'x', user_id: user.id
       tag2 = Tag.create name: 'tag2', sign: 'x', user_id: user.id
       expect {
@@ -104,7 +104,7 @@ RSpec.describe "Items", type: :request do
       expect(json['resource']['user_id']).to eq user.id
     end
     it "创建时 amount、tag_ids、happen_at 必填" do 
-      user = User.create email: '1@qq.com'
+      user = create:user
       post '/api/v1/items', params: {}, headers: user.generate_auth_header
       expect(response).to have_http_status 422
       json = JSON.parse response.body
@@ -115,7 +115,7 @@ RSpec.describe "Items", type: :request do
   end
   describe "统计数据" do 
     it '按天分组' do
-      user = User.create! email: '1@qq.com'
+      user = create:user
       tag = Tag.create! name: 'tag1', sign: 'x', user_id: user.id
       Item.create! amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
       Item.create! amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
@@ -141,7 +141,7 @@ RSpec.describe "Items", type: :request do
       expect(json['total']).to eq 900
     end
     it '按标签ID分组' do
-      user = User.create! email: '1@qq.com'
+      user = create:user
       tag1 = Tag.create! name: 'tag1', sign: 'x', user_id: user.id
       tag2 = Tag.create! name: 'tag2', sign: 'x', user_id: user.id
       tag3 = Tag.create! name: 'tag3', sign: 'x', user_id: user.id
