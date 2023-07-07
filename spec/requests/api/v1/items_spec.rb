@@ -45,7 +45,7 @@ RSpec.describe "Items", type: :request do
     end
     it "按时间筛选（边界条件）" do
       user1 = create:user
-      item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
+      item1 = create:item, created_at: '2018-01-01', user: user1
 
       get '/api/v1/items?created_after=2018-01-01&created_before=2018-01-02',
         headers: user1.generate_auth_header
@@ -56,8 +56,8 @@ RSpec.describe "Items", type: :request do
     end
     it "按时间筛选（边界条件2）" do
       user1 = create:user
-      item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
-      item2 = Item.create amount: 100, created_at: '2017-01-01', user_id: user1.id
+      item1 = create:item, created_at: '2018-01-01', user: user1
+      item2 = create:item, created_at: '2017-01-01', user: user1
 
       get '/api/v1/items?created_after=2018-01-01', 
         headers: user1.generate_auth_header
@@ -68,8 +68,8 @@ RSpec.describe "Items", type: :request do
     end
     it "按时间筛选（边界条件3）" do
       user1 = create:user
-      item1 = Item.create amount: 100, created_at: '2018-01-01', user_id: user1.id
-      item2 = Item.create amount: 100, created_at: '2019-01-01', user_id: user1.id
+      item1 = create:item, created_at: '2018-01-01', user: user1
+      item2 = create:item, created_at: '2019-01-01', user: user1
 
       get '/api/v1/items?created_before=2018-01-02', 
         headers: user1.generate_auth_header
@@ -117,12 +117,12 @@ RSpec.describe "Items", type: :request do
     it '按天分组' do
       user = create:user
       tag = create:tag, user: user
-      Item.create! amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-20T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-20T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-19T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-19T00:00:00+08:00', user_id: user.id
+      create:item, amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
+      create:item, amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
+      create:item, amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-20T00:00:00+08:00', user: user
+      create:item, amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-20T00:00:00+08:00', user: user
+      create:item, amount: 100, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-19T00:00:00+08:00', user: user
+      create:item, amount: 200, kind: 'expenses', tag_ids: [tag.id], happen_at: '2018-06-19T00:00:00+08:00', user: user
       get '/api/v1/items/summary', params: {
         happened_after: '2018-01-01',
         happened_before: '2019-01-01',
@@ -145,9 +145,9 @@ RSpec.describe "Items", type: :request do
       tag1 = create:tag, user: user
       tag2 = create:tag, user: user
       tag3 = create:tag, user: user
-      Item.create! amount: 100, kind: 'expenses', tag_ids: [tag1.id, tag2.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 200, kind: 'expenses', tag_ids: [tag2.id, tag3.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
-      Item.create! amount: 300, kind: 'expenses', tag_ids: [tag3.id, tag1.id], happen_at: '2018-06-18T00:00:00+08:00', user_id: user.id
+      create:item, amount: 100, kind: 'expenses', tag_ids: [tag1.id, tag2.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
+      create:item, amount: 200, kind: 'expenses', tag_ids: [tag2.id, tag3.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
+      create:item, amount: 300, kind: 'expenses', tag_ids: [tag3.id, tag1.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
       get '/api/v1/items/summary', params: {
         happened_after: '2018-01-01',
         happened_before: '2019-01-01',
