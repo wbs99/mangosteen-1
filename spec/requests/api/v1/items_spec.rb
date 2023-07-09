@@ -3,19 +3,18 @@ require 'rails_helper'
 RSpec.describe "Items", type: :request do
   describe "获取账目" do
     it "分页，未登录" do
-      create_list:item, 11
+      create_list:item, Item.default_per_page
       get '/api/v1/items'
       expect(response).to have_http_status 401
     end
     it "分页" do
       user = create:user
-      items = create_list:item, 11, user: user
-      create_list:item, 11
+      items = create_list:item, Item.default_per_page+1, user: user
 
       get "/api/v1/items", headers: items.first.user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
-      expect(json['resources'].size).to eq 10
+      expect(json['resources'].size).to eq Item.default_per_page
 
       get "/api/v1/items?page=2", headers: items.first.user.generate_auth_header
       expect(response).to have_http_status 200
