@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :tags
       resources :items do 
         collection do 
+          get :balance
           get :summary
         end
       end
