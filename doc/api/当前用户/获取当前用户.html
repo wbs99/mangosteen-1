@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>标签 API</title>
+    <title>当前用户 API</title>
     <meta charset="utf-8">
     <style>
       
@@ -106,77 +106,26 @@ table th, table td {
   </head>
   <body>
     <div class="container">
-      <h1>标签 API</h1>
+      <h1>当前用户 API</h1>
 
       <div class="article">
-        <h2>获取标签</h2>
-        <h3>GET /api/v1/tags/:id</h3>
+        <h2>获取当前用户</h2>
+        <h3>GET /api/v1/me</h3>
 
 
-          <h3>Response Fields</h3>
-          <table class="response-fields table table-striped table-bordered table-condensed">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                    <span class="name">resource[id]</span>
-                </td>
-                <td>
-                  <span class="description">ID</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <span class="name">resource[name]</span>
-                </td>
-                <td>
-                  <span class="description">名称</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <span class="name">resource[sign]</span>
-                </td>
-                <td>
-                  <span class="description">符号</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <span class="name">resource[user_id]</span>
-                </td>
-                <td>
-                  <span class="description">用户ID</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <span class="name">resource[deleted_at]</span>
-                </td>
-                <td>
-                  <span class="description">删除时间</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
 
           <h3>Request</h3>
 
             <h4>Headers</h4>
             <pre class="request headers">Version: HTTP/1.0
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOTEsImV4cCI6MTY4ODk2MzkyOH0.LxOG30z8N2-skOhzLUatVeyT-0GcRnn-c-ukb2i0X70
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODksImV4cCI6MTY4ODk2MzkyOH0.0V0G9xsO4eDXY54GbDWTpT3ZsO8UPlSA8wVzdNaX204
 Accept: application/json
 Content-Type: application/json
 Host: example.org
 Cookie: </pre>
 
           <h4>Route</h4>
-          <pre class="request route highlight">GET /api/v1/tags/928</pre>
+          <pre class="request route highlight">GET /api/v1/me</pre>
 
 
 
@@ -191,24 +140,21 @@ X-Permitted-Cross-Domain-Policies: none
 Referrer-Policy: strict-origin-when-cross-origin
 Content-Type: application/json; charset=utf-8
 Vary: Accept
-ETag: W/&quot;f076b59168c999e93a756e5f302c4320&quot;
+ETag: W/&quot;32602bb7ef0997213649e4ded87f2f97&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c8d58580-9472-483c-a664-22405c6b08c6
-X-Runtime: 0.004700
-Content-Length: 181</pre>
+X-Request-Id: 9ca7d121-fa63-45be-8b46-70c54a2a6e9f
+X-Runtime: 0.003853
+Content-Length: 156</pre>
             <h4>Status</h4>
             <pre class="response status">200 OK</pre>
               <h4>Body</h4>
               <pre class="response body">{
   &quot;resource&quot;: {
-    &quot;id&quot;: 928,
-    &quot;user_id&quot;: 291,
-    &quot;name&quot;: &quot;Deb.&quot;,
-    &quot;sign&quot;: &quot;😀&quot;,
-    &quot;deleted_at&quot;: null,
-    &quot;created_at&quot;: &quot;2023-07-10T02:38:48.753Z&quot;,
-    &quot;updated_at&quot;: &quot;2023-07-10T02:38:48.753Z&quot;,
-    &quot;kind&quot;: &quot;expenses&quot;
+    &quot;id&quot;: 289,
+    &quot;email&quot;: &quot;annemarie@thompson-mayert.test&quot;,
+    &quot;name&quot;: null,
+    &quot;created_at&quot;: &quot;2023-07-10T02:38:48.722Z&quot;,
+    &quot;updated_at&quot;: &quot;2023-07-10T02:38:48.722Z&quot;
   }
 }</pre>
       </div>
