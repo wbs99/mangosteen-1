@@ -16,4 +16,9 @@ class Item < ApplicationRecord
       self.errors.add :tag_ids, '不属于当前用户'
     end
   end
+
+  # 根据 id 查找 tag 表中对应的 tag
+  def tags
+    Tag.where(id: tag_ids)
+  end
 end
