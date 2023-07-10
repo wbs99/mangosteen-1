@@ -2,9 +2,11 @@ class Api::V1::ItemsController < ApplicationController
   def index
     current_user_id = request.env['current_user_id']
     return head :unauthorized if current_user_id.nil?
-    items = Item.where({user_id: current_user_id})
-      .where({ happen_at: params[:happen_after]..params[:happen_before] })
-      .page(params[:page])
+    items = Item.where(user_id: current_user_id)
+      .where(happen_at: params[:happen_after]..params[:happen_before])
+
+    items = items.where(kind: params[:kind]) unless params[:kind].blank?
+    items = items.page(params[:page])
     render json: { resources: items, pager: {
       page: params[:page] || 1,
       per_page: Item.default_per_page,
@@ -14,7 +16,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     # 数组参数必须写在最后
-    item = Item.new params.permit(:amount, :happen_at, tag_ids: [] )  
+    item = Item.new params.permit(:amount, :happen_at, :kind, tag_ids: [])
     item.user_id = request.env['current_user_id']    
     if item.save
       render json: { resource: item }
