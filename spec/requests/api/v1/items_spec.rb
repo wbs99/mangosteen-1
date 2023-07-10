@@ -97,7 +97,8 @@ RSpec.describe "Items", type: :request do
         params: {
           amount: 99,
           tag_ids: [tag1.id,tag2.id],
-          happen_at: '2018-01-01T00:00:00+08:00'
+          happen_at: '2018-01-01T00:00:00+08:00',
+          kind: 'income'
         }, 
         headers: user.generate_auth_header
       }.to change {Item.count}.by 1
@@ -106,6 +107,8 @@ RSpec.describe "Items", type: :request do
       expect(json['resource']['id']).to be_an(Numeric)
       expect(json['resource']['amount']).to eq 99
       expect(json['resource']['user_id']).to eq user.id
+      expect(json["resource"]["kind"]).to eq "income"
+
     end
     it "创建时 amount、tag_ids、happen_at 必填" do 
       user = create:user
