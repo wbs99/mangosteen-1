@@ -53,7 +53,10 @@ class Api::V1::ItemsController < ApplicationController
       .where(happen_at: params[:happened_after]..params[:happened_before])
     # 下面这两句是等价的
     # hash[key] = hash[key] || 0
+    tags = []
     items.each do |item|
+      tags += item.tags
+
       if params[:group_by] == 'happen_at'
         key = item.happen_at.in_time_zone('Beijing').strftime('%F')
         hash[key] ||= 0
@@ -69,7 +72,11 @@ class Api::V1::ItemsController < ApplicationController
 
     # 遍历 hash 转换成数组
     groups = hash
-      .map { |key, value| {"#{params[:group_by]}": key, amount: value} }
+      .map { |key, value| {
+          "#{params[:group_by]}": key, 
+          amount: value,
+          tag: tags.find {|tag| tag.id == key }
+        } }
     if params[:group_by] == 'happen_at'
       groups.sort! { |a, b| a[:happen_at] <=> b[:happen_at] }
     elsif params[:group_by] == 'tag_id'
