@@ -3,7 +3,7 @@ class Api::V1::ItemsController < ApplicationController
     current_user_id = request.env['current_user_id']
     return head :unauthorized if current_user_id.nil?
     items = Item.where(user_id: current_user_id)
-      .where(happen_at: (datetime_with_zone(start_time)..datetime_with_zone(end_time)))
+      .where(happened_at: (datetime_with_zone(start_time)..datetime_with_zone(end_time)))
     items = items.where(kind: params[:kind]) unless params[:kind].blank?
     paged = items.page(params[:page])
     render json: { resources: paged, pager: {
@@ -15,7 +15,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     # 数组参数必须写在最后
-    item = Item.new params.permit(:amount, :happen_at, :kind, tag_ids: [])
+    item = Item.new params.permit(:amount, :happen_at, :happened_at, :kind, tag_ids: [])
     item.user_id = request.env['current_user_id']    
     if item.save
       render json: { resource: item }
@@ -28,7 +28,7 @@ class Api::V1::ItemsController < ApplicationController
     current_user_id = request.env["current_user_id"]
     return head :unauthorized if current_user_id.nil?
     items = Item.where({ user_id: current_user_id })
-      .where({ happen_at: start_time..end_time })
+      .where({ happened_at: start_time..end_time })
     income_items = []
     expenses_items = []
     items.each {|item|
@@ -49,15 +49,15 @@ class Api::V1::ItemsController < ApplicationController
     items = Item
       .where(user_id: request.env['current_user_id'])
       .where(kind: params[:kind])
-      .where(happen_at: start_time..end_time)
+      .where(happened_at: start_time..end_time)
     # 下面这两句是等价的
     # hash[key] = hash[key] || 0
     tags = []
     items.each do |item|
       tags += item.tags
 
-      if params[:group_by] == 'happen_at'
-        key = item.happen_at.in_time_zone('Beijing').strftime('%F')
+      if params[:group_by] == "happen_at" or params[:group_by] == "happened_at"
+        key = item.happened_at.in_time_zone('Beijing').strftime('%F')
         hash[key] ||= 0
         hash[key] += item.amount
       else
@@ -76,8 +76,8 @@ class Api::V1::ItemsController < ApplicationController
           amount: value,
           tag: tags.find {|tag| tag.id == key }
         } }
-    if params[:group_by] == 'happen_at'
-      groups.sort! { |a, b| a[:happen_at] <=> b[:happen_at] }
+    if params[:group_by] == "happen_at" or params[:group_by] == "happened_at"
+      groups.sort! { |a, b| a[:happened_at] <=> b[:happened_at] }
     elsif params[:group_by] == 'tag_id'
       groups.sort! { |a, b| b[:amount] <=> a[:amount] }
     end
