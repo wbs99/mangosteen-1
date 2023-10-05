@@ -4,7 +4,7 @@ ip=121.5.55.95
 
 time=$(date +'%Y%m%d-%H%M%S')
 cache_dir=tmp/deploy_cache
-dist=$cache_dir/mangosteen-$time.tar.gz
+dist=$cache_dir/$user-$time.tar.gz
 current_dir=$(dirname $0)
 deploy_dir=/home/$user/deploys/$time
 gemfile=$current_dir/../Gemfile
