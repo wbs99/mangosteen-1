@@ -1,12 +1,18 @@
 # 创建数据库
 
-```
+windows 终端
+
+```bash
 docker run -d --name db-for-mangosteen -e POSTGRES_USER=mangosteen -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=mangosteen_dev -e PGDATA=/var/lib/postgresql/data/pgdata -v mangosteen-data:/var/lib/postgresql/data --network=network1 postgres:14
 ```
 
 # 启动数据库
 
-在 `windows` 终端运行 `docker start db-for-mangosteen`
+windows 终端
+
+```bash
+docker start db-for-mangosteen
+```
 
 # 部署相关
 
