@@ -1,6 +1,6 @@
 # 注意修改 user 和 ip
 user=mangosteen
-ip=121.5.55.95
+ip=118.31.32.176
 
 time=$(date +'%Y%m%d-%H%M%S')
 cache_dir=tmp/deploy_cache
