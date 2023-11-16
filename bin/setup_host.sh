@@ -1,8 +1,9 @@
+user=mangosteen
 root=mangosteen_deploy 
 version=$(cat $root/version)
 
-container_name=mangosteen-prod-1
-db_container_name=db-for-mangosteen
+container_name=$user-prod-1
+db_container_name=db-for-$user
 
 DB_HOST=$db_container_name
 DB_PASSWORD=123456
@@ -37,19 +38,19 @@ if [ "$(docker ps -aq -f name=^${DB_HOST}$)" ]; then
 else
   docker run -d --name $DB_HOST \
             --network=network1 \
-            -e POSTGRES_USER=mangosteen \
-            -e POSTGRES_DB=mangosteen_production \
+            -e POSTGRES_USER=$user \
+            -e POSTGRES_DB=$user_production \
             -e POSTGRES_PASSWORD=$DB_PASSWORD \
             -e PGDATA=/var/lib/postgresql/data/pgdata \
-            -v mangosteen-data:/var/lib/postgresql/data \
+            -v $user-data:/var/lib/postgresql/data \
             postgres:14
   echo '创建成功'
 fi
 
 title 'docker build'
-docker build $root -t mangosteen:$version
+docker build $root -t $user:$version
 
-if [ "$(docker ps -aq -f name=^mangosteen-prod-1$)" ]; then
+if [ "$(docker ps -aq -f name=^${container_name}$)" ]; then
   title 'docker rm'
   docker rm -f $container_name
 fi
@@ -61,7 +62,7 @@ docker run -d -p 3000:3000 \
            -e DB_HOST=$DB_HOST \
            -e DB_PASSWORD=$DB_PASSWORD \
            -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
-           mangosteen:$version
+           $user:$version
 
 echo
 echo "是否要更新数据库？[y/N]"
