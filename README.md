@@ -18,12 +18,12 @@ docker start db-for-mangosteen
 
 - 不需要更新数据库执行下面命令
 
-```
+```bash
 bin/pack_for_remote.sh
 ```
 
 - 需要更新数据库时，执行下面命令
 
-```
+```bash
 need_migrate=1 bin/pack_for_remote.sh
 ```
