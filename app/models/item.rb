@@ -10,10 +10,16 @@ class Item < ApplicationRecord
 
   belongs_to :user
 
+  # 自定义校验
   validate :check_tag_ids_belong_to_user
 
   alias_attribute :happen_at, :happened_at
 
+  # 示例：
+  # a1 = [1,2,3]
+  # a2 = [1,2,3,4,5,6]
+  # a1 & a2 = a1 
+  # 则说明 a1 是 a2 子集，即 a1 包含于 a2
   def check_tag_ids_belong_to_user
     all_tag_ids = Tag.where(user_id: self.user_id).map(&:id)
     if self.tag_ids & all_tag_ids != self.tag_ids

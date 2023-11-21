@@ -52,6 +52,7 @@ class Api::V1::ItemsController < ApplicationController
       .where(happened_at: start_time..end_time)
     # 下面这两句是等价的
     # hash[key] = hash[key] || 0
+    # hash[key] ||= 0
     tags = []
     items.each do |item|
       tags += item.tags
