@@ -1,8 +1,8 @@
 class Session
   include ActiveModel::Model
   attr_accessor :email, :code
-  validates :email, :code, presence: true
-  validates :email, format: {with: /\A.+@.+\z/}
+  validates :email, presence: true,format: {with: /\A.+@.+\z/}
+  validates :code, presence: true
 
   validate :check_validation_code
 
