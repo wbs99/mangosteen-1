@@ -44,11 +44,11 @@ class Api::V1::TagsController < ApplicationController
   def destroy
     tag = Tag.find params[:id]
     return head :forbidden unless tag.user_id == request.env['current_user_id']
-    tag.deleted_at = Time.now
+    tag.deleted_at = Time.current
     ActiveRecord::Base.transaction do
       begin
         Item.where('tag_ids && ARRAY[?]::bigint[]', [tag.id])
-            .update!(deleted_at: Time.now)
+            .update!(deleted_at: Time.current)
         tag.save!
       rescue
         return head 422

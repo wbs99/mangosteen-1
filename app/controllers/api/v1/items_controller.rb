@@ -92,7 +92,7 @@ class Api::V1::ItemsController < ApplicationController
   def destroy
     item = Item.find params[:id]
     return head :forbidden unless item.user_id == request.env['current_user_id']
-    item.deleted_at = Time.now
+    item.deleted_at = Time.current
     if item.save
       render json: { resource: item }
     else

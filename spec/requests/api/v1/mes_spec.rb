@@ -19,7 +19,7 @@ RSpec.describe "Me", type: :request do
       expect(json['resource']['id']).to be_a Numeric
     end
     it "jwt过期" do
-      travel_to Time.now - 3.hours
+      travel_to Time.current - 3.hours
       user1 = create:user
       jwt = user1.generate_jwt
 
@@ -28,7 +28,7 @@ RSpec.describe "Me", type: :request do
       expect(response).to have_http_status(401)
     end
     it "jwt没过期" do
-      travel_to Time.now - 1.hours
+      travel_to Time.current - 1.hours
       user1 = create:user
       jwt = user1.generate_jwt
 

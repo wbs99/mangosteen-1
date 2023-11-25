@@ -17,8 +17,8 @@ resource "账目" do
     let(:happened_before) { DateTime.now }
     example "获取账目" do
       tag = create :tag, user: current_user
-      create_list :item, Item.default_per_page - 3, tag_ids: [tag.id], user: current_user, happen_at: Time.now - 15.days
-      create_list :item, 3, tag_ids: [tag.id], user: current_user, happen_at: Time.now - 5.days
+      create_list :item, Item.default_per_page - 3, tag_ids: [tag.id], user: current_user, happen_at: Time.current - 15.days
+      create_list :item, 3, tag_ids: [tag.id], user: current_user, happen_at: Time.current - 5.days
       do_request
       expect(status).to eq 200
       json = JSON.parse response_body
