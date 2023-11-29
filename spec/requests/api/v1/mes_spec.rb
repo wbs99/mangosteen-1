@@ -13,27 +13,28 @@ RSpec.describe "Me", type: :request do
       json = JSON.parse response.body
       jwt = json['jwt']
 
-      get '/api/v1/me', headers: {'Authorization': "Bearer #{jwt}"}
+      user = create:user
+      get '/api/v1/me', headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
       expect(json['resource']['id']).to be_a Numeric
     end
     it "jwt过期" do
       travel_to Time.current - 3.hours
-      user1 = create:user
-      jwt = user1.generate_jwt
+      user = create:user
+      headers = user.generate_auth_header
 
       travel_back
-      get '/api/v1/me', headers: {'Authorization': "Bearer #{jwt}"}
+      get '/api/v1/me', headers: headers
       expect(response).to have_http_status(401)
     end
     it "jwt没过期" do
       travel_to Time.current - 1.hours
-      user1 = create:user
-      jwt = user1.generate_jwt
-
+      user = create:user
+      headers = user.generate_auth_header
+      
       travel_back
-      get '/api/v1/me', headers: {'Authorization': "Bearer #{jwt}"}
+      get '/api/v1/me', headers: headers
       expect(response).to have_http_status(200)
     end
   end
