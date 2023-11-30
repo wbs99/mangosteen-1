@@ -3,6 +3,7 @@ root=/home/$user/deploys/$version
 container_name=$user-prod-1
 nginx_container_name=$user-nginx-1
 db_container_name=db-for-$user
+network_name=network1
 
 function set_env {
   name=$1
@@ -28,12 +29,20 @@ set_env DB_HOST
 set_env DB_PASSWORD
 set_env RAILS_MASTER_KEY '请将 config/credentials/production.key 的内容复制到这里'
 
+title '检查远程机器中是否已创建 network1'
+if [ "$(docker network ls -q -f name=^${network_name}$)" ]; then
+  echo '已存在 network1'
+else
+  docker network create $network_name
+  echo '创建成功'
+fi
+
 title '创建数据库'
 if [ "$(docker ps -aq -f name=^${DB_HOST}$)" ]; then
   echo '已存在数据库'
 else
   docker run -d --name $DB_HOST \
-            --network=network1 \
+            --network=$network_name \
             -e POSTGRES_USER=$user \
             -e POSTGRES_DB=$user_production \
             -e POSTGRES_PASSWORD=$DB_PASSWORD \
@@ -53,7 +62,7 @@ fi
 
 title 'app: docker run'
 docker run -d -p 3000:3000 \
-           --network=network1 \
+           --network=$network_name \
            --name=$container_name \
            -e DB_HOST=$DB_HOST \
            -e DB_PASSWORD=$DB_PASSWORD \
@@ -72,7 +81,7 @@ fi
 
 title 'doc: docker run'
 docker run -d -p 8080:80 \
-           --network=network1 \
+           --network=$network_name \
            --name=$nginx_container_name \
            -v /home/$user/deploys/$version/api:/usr/share/nginx/html:ro \
            nginx:latest
