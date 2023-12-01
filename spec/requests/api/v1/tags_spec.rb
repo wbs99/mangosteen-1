@@ -125,20 +125,20 @@ RSpec.describe "Api::V1::Tags", type: :request do
       delete "/api/v1/tags/#{tag.id}"
       expect(response).to have_http_status(401)
     end
-    it '登录后删除标签' do
+    it '登录后删除别人的标签' do
+      user1 = create:user
+      user2 = create:user
+      tag = create:tag, user: user2
+      delete "/api/v1/tags/#{tag.id}", headers: user1.generate_auth_header
+      expect(response).to have_http_status(403)
+    end
+    it '登录后删除自己的标签' do
       user = create:user
       tag = create:tag, user: user
       delete "/api/v1/tags/#{tag.id}", headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       tag.reload
       expect(tag.deleted_at).not_to eq nil
-    end
-    it '登录后删除别人的标签' do
-      user = create:user
-      other = create:user
-      tag = create:tag, user: other
-      delete "/api/v1/tags/#{tag.id}", headers: user.generate_auth_header
-      expect(response).to have_http_status(403)
     end
     it "删除标签和对应的记账" do
       user = create :user
