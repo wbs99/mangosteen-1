@@ -40,6 +40,10 @@ fi
 title '创建数据库'
 if [ "$(docker ps -aq -f name=^${DB_HOST}$)" ]; then
   echo '已存在数据库'
+  if ! docker container inspect $DB_HOST --format '{{.State.Status}}' | grep -q 'running'; then
+    echo '启动数据库'
+    docker start $DB_HOST
+  fi
 else
   docker run -d --name $DB_HOST \
             --network=$network_name \
@@ -80,10 +84,19 @@ if [ "$(docker ps -aq -f name=^${nginx_container_name}$)" ]; then
 fi
 
 title 'doc: docker run'
+cd /home/$user/deploys/$version
+if [[ -f dist.tar.gz ]]; then
+  mkdir ./dist
+  tar xf dist.tar.gz --directory=./dist
+fi
+cd -
+
 docker run -d -p 8080:80 \
            --network=$network_name \
            --name=$nginx_container_name \
-           -v /home/$user/deploys/$version/api:/usr/share/nginx/html:ro \
+           -v /home/$user/deploys/$version/nginx.default.conf:/etc/nginx/conf.d/default.conf \
+           -v /home/$user/deploys/$version/dist:/usr/share/nginx/html \
+           -v /home/$user/deploys/$version/api:/usr/share/nginx/html/apidoc \
            nginx:latest
 
 title '全部执行完毕'
