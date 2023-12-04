@@ -56,6 +56,7 @@ scp "$frontend_dir/dist.tar.gz" $user@$ip:$deploy_dir/
 yes | rm -rf $frontend_dir
 title '上传 Dockerfile'
 scp $current_dir/../config/host.Dockerfile $user@$ip:$deploy_dir/Dockerfile
+title '上传 nginx 配置文件'
 scp $current_dir/../config/nginx.default.conf $user@$ip:$deploy_dir/
 title '上传 setup 脚本'
 scp $current_dir/setup_remote.sh $user@$ip:$deploy_dir/
