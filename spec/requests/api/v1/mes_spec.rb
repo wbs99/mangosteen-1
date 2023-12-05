@@ -20,7 +20,7 @@ RSpec.describe "Me", type: :request do
       expect(json['resource']['id']).to be_a Numeric
     end
     it "jwt过期" do
-      travel_to Time.current - 2.hours
+      travel_to Time.current - 3.hours
       user = create:user
       headers = user.generate_auth_header
 
@@ -29,7 +29,7 @@ RSpec.describe "Me", type: :request do
       expect(response).to have_http_status(401)
     end
     it "jwt没过期" do
-      travel_to Time.current - 0.9.hours
+      travel_to Time.current - 1.hours
       user = create:user
       headers = user.generate_auth_header
       

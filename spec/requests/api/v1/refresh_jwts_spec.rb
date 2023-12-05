@@ -10,6 +10,7 @@ RSpec.describe "Api::V1::RefreshJwts", type: :request do
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
       expect(json['jwt']).to be_a String
+      expect(json['refresh_jwt']).to be_a String
     end
     it "refresh_jwt 过期" do
       travel_to Time.current - 8.days
