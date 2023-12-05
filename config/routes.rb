@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :validation_codes, only: [:create]
       resource :session, only: [:create, :destroy]
       resource :me, only: [:show]
+      resource :refresh_jwt, only: [:show]
       resources :tags
       resources :items do 
         collection do 
