@@ -1,10 +1,12 @@
+# 注意将 bible 替换为当前应用名称
 # 注意修改 oh-my-env 目录名为你的目录名
-dir=oh-my-env
 
+user=mangosteen
+dir=oh-my-env
 time=$(date +'%Y%m%d-%H%M%S')
-dist=tmp/mangosteen-$time.tar.gz
+dist=tmp/$user-$time.tar.gz
 current_dir=$(dirname $0)
-deploy_dir=/workspaces/$dir/mangosteen_deploy
+deploy_dir=/workspaces/$dir/${user}_deploy
 gemfile=$current_dir/../Gemfile
 gemfile_lock=$current_dir/../Gemfile.lock
 vendor_dir=$current_dir/../vendor
@@ -18,8 +20,8 @@ function title {
   echo 
 }
 
-yes | rm tmp/mangosteen-*.tar.gz; 
-yes | rm $deploy_dir/mangosteen-*.tar.gz; 
+yes | rm tmp/$user-*.tar.gz; 
+yes | rm $deploy_dir/$user-*.tar.gz; 
 
 title '打包源代码'
 tar --exclude="tmp/cache/*" --exclude="tmp/deploy_cache/*" --exclude="vendor/*" -cz -f $dist *

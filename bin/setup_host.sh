@@ -1,5 +1,7 @@
+# 注意将 bible 替换为当前应用名称
+
 user=mangosteen
-root=mangosteen_deploy 
+root=${user}_deploy 
 version=$(cat $root/version)
 
 container_name=$user-prod-1
