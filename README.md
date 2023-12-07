@@ -27,3 +27,16 @@ bin/pack_for_remote.sh
 ```bash
 need_migrate=1 bin/pack_for_remote.sh
 ```
+# 注意事项
+1. clone 项目后，重新生成密钥 ( 这一步必须做，否则运行测试用例会报错 )
+```bash 
+rm config/credentials.yml.enc
+EDITOR="code --wait" bin/rails credentials:edit
+EDITOR="code --wait" rails credentials:edit --environment production
+```
+在自动生成的文件中写入以下内容 (xxx 是密码或是随机字符串)
+```
+secret_key_base: xxx
+email_password: xxx
+hmac_secret: xxx
+```
