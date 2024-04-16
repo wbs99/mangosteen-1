@@ -54,7 +54,7 @@ hmac_secret: xxx
 2. 部署失败的一些原因
 
 - 远程机器上的 `RAILS_MASTER_KEY` 和当前项目中的 `RAILS_MASTER_KEY` 不一致。
-- 解决方式：登录到远程机器，删除 `bashrc` 中的 `DB_HOST` `DB_PASSWORD` `RAILS_MASTER_KEY`，再次部署时，重新是输入即可
+- 解决方式：登录到远程机器，删除 `bashrc` 中的 `DB_HOST` `DB_PASSWORD` `RAILS_MASTER_KEY`，再次部署时，重新输入即可
 
   ```bash
   ssh mangosteen@ip
