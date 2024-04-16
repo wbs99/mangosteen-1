@@ -1,4 +1,4 @@
-# 注意将 bible 替换为当前应用名称
+# 注意将 mangosteen 替换为当前应用名称
 
 FROM ruby:3.0.0
 

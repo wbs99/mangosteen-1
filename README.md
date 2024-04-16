@@ -14,6 +14,11 @@ docker run -d --name db-for-mangosteen -e POSTGRES_USER=mangosteen -e POSTGRES_P
 docker start db-for-mangosteen
 ```
 
+# 启动项目
+```bash 
+bin/rails s
+```
+
 # 部署相关
 
 - 不需要更新数据库执行下面命令

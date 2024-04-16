@@ -2,7 +2,7 @@ require 'rspec_api_documentation'
 
 RspecApiDocumentation.configure do |config|
   config.request_body_formatter = :json
-  config.api_name = "山竹记账 API 文档"
+  config.api_name = "熊猫记账 API 文档"
   config.api_explanation = <<EOF
   <style>
     strong {color: #f60;}

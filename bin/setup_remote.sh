@@ -1,4 +1,10 @@
+# 修改 user api_port api_doc_and_front_port
+# 端口需要在云服务器中添加并且不与其他应用冲突
+
 user=mangosteen
+api_port=3000
+api_doc_and_front_port=8080
+
 root=/home/$user/deploys/$version
 container_name=$user-prod-1
 nginx_container_name=$user-nginx-1
@@ -65,7 +71,7 @@ if [ "$(docker ps -aq -f name=^${container_name}$)" ]; then
 fi
 
 title 'app: docker run'
-docker run -d -p 3000:3000 \
+docker run -d -p $api_port:$api_port \
            --network=$network_name \
            --name=$container_name \
            -e DB_HOST=$DB_HOST \
@@ -91,7 +97,7 @@ if [[ -f dist.tar.gz ]]; then
 fi
 cd -
 
-docker run -d -p 8080:80 \
+docker run -d -p $api_doc_and_front_port:80 \
            --network=$network_name \
            --name=$nginx_container_name \
            -v /home/$user/deploys/$version/nginx.default.conf:/etc/nginx/conf.d/default.conf \

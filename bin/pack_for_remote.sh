@@ -1,6 +1,8 @@
-# 注意修改 user 和 ip
+# 修改 user ip frontend_git_repo
+
 user=mangosteen
 ip=118.31.32.176
+frontend_git_repo=git@github.com:wbs99/react-pandasteen.git
 
 time=$(date +'%Y%m%d-%H%M%S')
 cache_dir=tmp/deploy_cache
@@ -13,7 +15,6 @@ vendor_dir=$current_dir/../vendor
 vendor_1=rspec_api_documentation
 api_dir=$current_dir/../doc/api
 frontend_dir=$cache_dir/frontend
-frontend_git_repo=git@github.com:wbs99/react-pandasteen.git
 
 function title {
   echo 

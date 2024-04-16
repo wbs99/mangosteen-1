@@ -1,4 +1,4 @@
-# 注意将 bible 替换为当前应用名称
+# 注意将 mangosteen 替换为当前应用名称
 # 注意修改 oh-my-env 目录名为你的目录名
 
 user=mangosteen
