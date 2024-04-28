@@ -11,7 +11,6 @@ RSpec.describe "Me", type: :request do
       }.to change { User.count }.by +1
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
-      jwt = json['jwt']
 
       user = create:user
       get '/api/v1/me', headers: user.generate_auth_header
@@ -32,7 +31,7 @@ RSpec.describe "Me", type: :request do
       travel_to Time.current - 1.hours
       user = create:user
       headers = user.generate_auth_header
-      
+
       travel_back
       get '/api/v1/me', headers: headers
       expect(response).to have_http_status(200)

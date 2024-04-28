@@ -24,11 +24,8 @@ RSpec.describe "Items", type: :request do
     end
     it "按时间筛选" do
       user = create:user
-      tag1 = create:tag, user: user
-      tag2 = create:tag, user: user
       item1 = create:item, happen_at: "2018-01-02", user: user
       item2 = create:item, happen_at: "2018-01-02", user: user
-      item3 = create:item, happen_at: "2019-01-01", user: user
 
       get "/api/v1/items?happen_after=2018-01-01&happen_before=2018-01-03",
         headers: user.generate_auth_header
@@ -39,7 +36,6 @@ RSpec.describe "Items", type: :request do
       expect(json['resources'][1]['id']).to eq item2.id
     end
     it "按时间筛选（边界条件）" do
-      user = create:user
       item = create:item, happen_at: "2018-01-01"
 
       get '/api/v1/items?created_after=2018-01-01&created_before=2018-01-02',
@@ -51,7 +47,6 @@ RSpec.describe "Items", type: :request do
     end
     it "按时间筛选（边界条件2）" do
       item1 = create :item, happen_at: "2018-01-01"
-      item2 = create :item, happen_at: "2017-01-01", user: item1.user
 
       get "/api/v1/items", params:{
         happen_after: '2018-01-01'
@@ -64,10 +59,8 @@ RSpec.describe "Items", type: :request do
     it "按时间筛选（边界条件3）" do
       user = create:user
       item1 = create :item, happen_at: "2018-01-01", user: user
-      item2 = create :item, happen_at: "2019-01-01", user: user
 
-      get "/api/v1/items?happen_before=2018-01-02",
-        headers: user.generate_auth_header
+      get "/api/v1/items?happen_before=2018-01-02", headers: user.generate_auth_header
       expect(response).to have_http_status 200
       json = JSON.parse(response.body)
       expect(json['resources'].size).to eq 1
@@ -111,10 +104,10 @@ RSpec.describe "Items", type: :request do
       expect(json['resource']['user_id']).to eq user.id
       expect(json["resource"]["happen_at"]).to eq "2018-01-01T00:00:00.000+08:00"
       expect(json["resource"]["kind"]).to eq "income"
-
     end
     it "创建时 amount、tag_ids、happen_at 必填" do 
       user = create:user
+
       post '/api/v1/items', params: {}, headers: user.generate_auth_header
       expect(response).to have_http_status 422
       json = JSON.parse response.body
@@ -152,6 +145,7 @@ RSpec.describe "Items", type: :request do
       create :item, amount: 200, kind: "expenses", happen_at: "2018-06-20T00:00:00+08:00", user: user
       create :item, amount: 100, kind: "expenses", happen_at: "2018-06-19T00:00:00+08:00", user: user
       create :item, amount: 200, kind: "expenses", happen_at: "2018-06-19T00:00:00+08:00", user: user
+
       get '/api/v1/items/summary', params: {
         happened_after: '2018-01-01',
         happened_before: '2019-01-01',
@@ -177,6 +171,7 @@ RSpec.describe "Items", type: :request do
       create:item, amount: 100, kind: 'expenses', tag_ids: [tag1.id, tag2.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
       create:item, amount: 200, kind: 'expenses', tag_ids: [tag2.id, tag3.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
       create:item, amount: 300, kind: 'expenses', tag_ids: [tag3.id, tag1.id], happen_at: '2018-06-18T00:00:00+08:00', user: user
+      
       get '/api/v1/items/summary', params: {
         happened_after: '2018-01-01',
         happened_before: '2019-01-01',

@@ -4,6 +4,7 @@ RSpec.describe "Api::V1::Sessions", type: :request do
   describe "会话" do
     it "登录（创建会话）" do
       create:user
+      
       post "/api/v1/session", params: { email: "1134954328@qq.com", code: "123456" }
       expect(response).to have_http_status(200)
       json = JSON.parse response.body

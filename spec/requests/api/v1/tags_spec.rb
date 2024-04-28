@@ -43,11 +43,13 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it "未登录获取标签" do
       user = create:user
       tag = create:tag, user: user
+      
       get "/api/v1/tags/#{tag.id}"
       expect(response).to have_http_status(401)
     end
     it '登录后获取标签' do
       tag = create:tag
+
       get "/api/v1/tags/#{tag.id}", headers: tag.user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
@@ -57,6 +59,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
       user = create:user
       user2 = create:user
       tag = create:tag, user: user2
+
       get "/api/v1/tags/#{tag.id}", headers: user.generate_auth_header
       expect(response).to have_http_status(403)
     end
@@ -69,6 +72,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     end
     it '登录后创建标签' do
       user = create:user
+
       post "/api/v1/tags", params: { name: "name", sign: "sign", kind: 'expenses' }, headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
@@ -77,6 +81,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     end
     it '登录后创建标签失败，因为没填 name' do
       user = create:user
+
       post "/api/v1/tags", params: { sign: "sign", kind: 'income' }, headers: user.generate_auth_header
       expect(response).to have_http_status(422)
       json = JSON.parse response.body
@@ -84,6 +89,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     end
     it '登录后创建标签失败，因为没填 sign' do
       user = create:user
+
       post '/api/v1/tags', params: {name: 'name'}, headers: user.generate_auth_header
       expect(response).to have_http_status(422)
       json = JSON.parse response.body
@@ -95,12 +101,14 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it '未登录修改标签' do
       user = create:user
       tag = create:tag, user: user
+
       patch "/api/v1/tags/#{tag.id}", params: {name: 'y', sign: 'y'}
       expect(response).to have_http_status(401)
     end
     it '登录后修改标签' do
       user = create:user
       tag = create:tag, user: user
+
       patch "/api/v1/tags/#{tag.id}", params: {name: 'y', sign: 'y'}, headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
@@ -110,6 +118,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it '登录后部分修改标签' do
       user = create:user
       tag = create:tag, user: user
+
       patch "/api/v1/tags/#{tag.id}", params: {name: 'y'}, headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
@@ -122,6 +131,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it '未登录删除标签' do
       user = create:user
       tag = create:tag, user: user
+
       delete "/api/v1/tags/#{tag.id}"
       expect(response).to have_http_status(401)
     end
@@ -129,12 +139,14 @@ RSpec.describe "Api::V1::Tags", type: :request do
       user1 = create:user
       user2 = create:user
       tag = create:tag, user: user2
+
       delete "/api/v1/tags/#{tag.id}", headers: user1.generate_auth_header
       expect(response).to have_http_status(403)
     end
     it '登录后删除自己的标签' do
       user = create:user
       tag = create:tag, user: user
+
       delete "/api/v1/tags/#{tag.id}", headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       tag.reload
@@ -144,6 +156,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
       user = create :user
       tag = create :tag, user: user
       items = create_list :item, 2, user: user, tag_ids: [tag.id]
+
       delete "/api/v1/tags/#{tag.id}?with_items=true", headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       tag.reload
