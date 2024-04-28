@@ -44,19 +44,19 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def summary
-    hash = Hash.new
-    # hash 最终的格式  {2023-06-18:100,2023-06-19:200,2023-06-20:300}
     items = Item
       .where(user_id: request.env['current_user_id'])
       .where(kind: params[:kind])
       .where(happened_at: start_time..end_time)
+
+    hash = Hash.new
+    # hash 最终的格式  {2023-06-18:100,2023-06-19:200,2023-06-20:300}
     # 下面这两句是等价的
     # hash[key] = hash[key] || 0
     # hash[key] ||= 0
     tags = []
     items.each do |item|
       tags += item.tags
-
       if params[:group_by] == "happen_at" or params[:group_by] == "happened_at"
         key = item.happened_at.in_time_zone('Beijing').strftime('%F')
         hash[key] ||= 0
