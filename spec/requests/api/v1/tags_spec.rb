@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Tags", type: :request do
-  describe "获取标签列表" do
-    it "未登录获取标签" do
+RSpec.describe 'Api::V1::Tags', type: :request do
+  describe '获取标签列表' do
+    it '未登录获取标签' do
       get '/api/v1/tags'
       expect(response).to have_http_status(401)
     end
-    it "登录后获取标签" do
+    it '登录后获取标签' do
       user = create:user
       user2 = create:user
       create_list:tag, Tag.default_per_page+1, user: user, kind: 'expenses'
@@ -40,7 +40,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
   end
 
   describe '获取标签' do
-    it "未登录获取标签" do
+    it '未登录获取标签' do
       user = create:user
       tag = create:tag, user: user
       
@@ -73,7 +73,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it '登录后创建标签' do
       user = create:user
 
-      post "/api/v1/tags", params: { name: "name", sign: "sign", kind: 'expenses' }, headers: user.generate_auth_header
+      post '/api/v1/tags', params: { name: 'name', sign: 'sign', kind: 'expenses' }, headers: user.generate_auth_header
       expect(response).to have_http_status(200)
       json = JSON.parse response.body
       expect(json['resource']['name']).to eq 'name'
@@ -82,7 +82,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
     it '登录后创建标签失败，因为没填 name' do
       user = create:user
 
-      post "/api/v1/tags", params: { sign: "sign", kind: 'income' }, headers: user.generate_auth_header
+      post '/api/v1/tags', params: { sign: 'sign', kind: 'income' }, headers: user.generate_auth_header
       expect(response).to have_http_status(422)
       json = JSON.parse response.body
       expect(json['errors']['name'][0]).to be_a String
@@ -152,7 +152,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
       tag.reload
       expect(tag.deleted_at).not_to eq nil
     end
-    it "删除标签和对应的记账" do
+    it '删除标签和对应的记账' do
       user = create :user
       tag = create :tag, user: user
       items = create_list :item, 2, user: user, tag_ids: [tag.id]

@@ -2,10 +2,10 @@ require 'rails_helper'
 require 'active_support/testing/time_helpers'
 
 
-RSpec.describe "Me", type: :request do
+RSpec.describe 'Me', type: :request do
   include ActiveSupport::Testing::TimeHelpers
-  describe "获取当前用户" do
-    it "登录后成功获取" do
+  describe '获取当前用户' do
+    it '登录后成功获取' do
       expect {
         post '/api/v1/session', params: {email: '1134954328@qq.com', code: '123456'}
       }.to change { User.count }.by +1
@@ -18,7 +18,7 @@ RSpec.describe "Me", type: :request do
       json = JSON.parse response.body
       expect(json['resource']['id']).to be_a Numeric
     end
-    it "jwt过期" do
+    it 'jwt过期' do
       travel_to Time.current - 3.hours
       user = create:user
       headers = user.generate_auth_header
@@ -27,7 +27,7 @@ RSpec.describe "Me", type: :request do
       get '/api/v1/me', headers: headers
       expect(response).to have_http_status(401)
     end
-    it "jwt没过期" do
+    it 'jwt没过期' do
       travel_to Time.current - 1.hours
       user = create:user
       headers = user.generate_auth_header
