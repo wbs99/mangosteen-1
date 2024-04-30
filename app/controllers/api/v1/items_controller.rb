@@ -25,7 +25,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def balance
-    current_user_id = request.env["current_user_id"]
+    current_user_id = request.env['current_user_id']
     return head :unauthorized if current_user_id.nil?
     items = Item.where({ user_id: current_user_id })
       .where({ happened_at: start_time..end_time })
@@ -57,7 +57,7 @@ class Api::V1::ItemsController < ApplicationController
     tags = []
     items.each do |item|
       tags += item.tags
-      if params[:group_by] == "happen_at" or params[:group_by] == "happened_at"
+      if params[:group_by] == 'happen_at' or params[:group_by] == 'happened_at'
         key = item.happened_at.in_time_zone('Beijing').strftime('%F')
         hash[key] ||= 0
         hash[key] += item.amount
@@ -77,7 +77,7 @@ class Api::V1::ItemsController < ApplicationController
           amount: value,
           tag: tags.find {|tag| tag.id == key }
         } }
-    if params[:group_by] == "happen_at" or params[:group_by] == "happened_at"
+    if params[:group_by] == 'happen_at' or params[:group_by] == 'happened_at'
       groups.sort! { |a, b| a[:happened_at] <=> b[:happened_at] }
     elsif params[:group_by] == 'tag_id'
       groups.sort! { |a, b| b[:amount] <=> a[:amount] }
